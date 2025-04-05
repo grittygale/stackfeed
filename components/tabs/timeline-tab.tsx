@@ -1,17 +1,21 @@
-import { getTimelinePosts } from "@/lib/supabase"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { formatDistanceToNow } from "date-fns"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { formatDistanceToNow } from "date-fns";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export default async function TimelineTab() {
-  const posts = await getTimelinePosts()
+type TimelinePost = {
+  id: string;
+  content: string;
+  image_url?: string;
+  created_at: string;
+};
 
+export default function TimelineTab({ posts }: { posts: TimelinePost[] }) {
   if (posts.length === 0) {
     return (
       <div className="text-center py-12">
         <p className="text-zinc-400">No timeline posts found</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -22,13 +26,18 @@ export default async function TimelineTab() {
             <div className="flex items-start gap-3">
               <Avatar className="h-10 w-10">
                 <AvatarFallback>SK</AvatarFallback>
-                <AvatarImage src="/placeholder.svg?height=40&width=40" alt="Sagar Khanal" />
+                <AvatarImage
+                  src="/placeholder.svg?height=40&width=40"
+                  alt="Sagar Khanal"
+                />
               </Avatar>
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-medium">Sagar Khanal</span>
                   <span className="text-xs text-zinc-500">
-                    {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+                    {formatDistanceToNow(new Date(post.created_at), {
+                      addSuffix: true,
+                    })}
                   </span>
                 </div>
                 <p className="mt-2 text-zinc-300">{post.content}</p>
@@ -48,12 +57,10 @@ export default async function TimelineTab() {
             <div className="flex items-center gap-4 text-zinc-400 text-sm">
               <button className="hover:text-white transition">Like</button>
               <button className="hover:text-white transition">Comment</button>
-              <button className="hover:text-white transition">Share</button>
             </div>
           </CardFooter>
         </Card>
       ))}
     </div>
-  )
+  );
 }
-

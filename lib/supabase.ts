@@ -8,12 +8,13 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
 
 // Helper function to safely execute Supabase queries
 async function safeQuery<T>(
-  queryFn: () => Promise<{ data: T | null; error: any }>,
+  queryFn: () => Promise<{ data: T | null; error: any }> | { then: (onfulfilled: (value: { data: T | null; error: any }) => any) => any },
   errorMessage: string,
   defaultValue: T,
 ): Promise<T> {
   try {
-    const { data, error } = await queryFn()
+    const result = await queryFn();
+    const { data, error } = result;
 
     if (error) {
       // Check if the error is because the table doesn't exist
